@@ -178,13 +178,6 @@ public class Employe {
         this.specialite = specialite;
     }
 
-    /**
-     * calcul du hashcode de l'employe
-     * @return hashcode de l'employe
-     */
-    @Override
-    public int hashCode() {
-        Objects object;
-        return object.hash(idEmploye);
-    }
+
+
 }
