@@ -13,7 +13,7 @@ public class Disciplines {
     /**
      * nom unique de la discipline
      */
-    protected String nom;
+    protected static String nom; // ajout static suite a l'erreur dans l'override
 
     /**
      * description de la discipline
@@ -102,5 +102,13 @@ public class Disciplines {
      */
     public void setEmployes(List<Employe> employes) {
         this.employes = employes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Disciplines disciplines = (Disciplines) o;
+        return nom.equals(Disciplines.nom);
     }
 }
