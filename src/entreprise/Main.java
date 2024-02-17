@@ -36,5 +36,7 @@ public class Main {
         System.out.println("suppression : ");
         // Affichage des disciplines et investissements après suppression
         projet.ListeDisciplinesEtInvestissement();
+
+        System.out.println("Liste des spécialités : " + projet.listeSpecialite());
     }
 }
