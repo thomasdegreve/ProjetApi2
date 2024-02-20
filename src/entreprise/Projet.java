@@ -1,8 +1,8 @@
 package entreprise;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Projet {
@@ -17,11 +17,11 @@ public class Projet {
     /**
      * date du debut du projet
      */
-    protected Date datedebut;
+    protected LocalDate datedebut;
     /**
      * date de fin du projet
      */
-    protected Date datefin;
+    protected LocalDate datefin;
     /**
      * cout du projet
      */
@@ -45,7 +45,7 @@ public class Projet {
      * @param cout cout du projet/**
      * constructeur paramétré
      */
-    public Projet(int idProjet,String nom,Date datedebut,Date datefin,DecimalFormat cout){
+    public Projet(int idProjet,String nom,LocalDate datedebut,LocalDate datefin,DecimalFormat cout){
         this.idProjet=idProjet;
         this.nom=nom;
         this.datedebut=datedebut;
@@ -85,28 +85,28 @@ public class Projet {
      * getter Datedebut
      * return la date du debut du projet
      */
-    public Date getDatedebut() {
+    public LocalDate getDatedebut() {
         return datedebut;
     }
     /**
      * setter Datedebut
      * @param datedebut date debut du projet
      */
-    public void setDatedebut(Date datedebut) {
+    public void setDatedebut(LocalDate datedebut) {
         this.datedebut = datedebut;
     }
     /**
      * getter datefin
      * return la date de fin du projet
      */
-    public Date getDatefin() {
+    public LocalDate getDatefin() {
         return datefin;
     }
     /**
      * setter datefin
      * @param datefin date de fin du projet
      */
-    public void setDatefin(Date datefin) {
+    public void setDatefin(LocalDate datefin) {
         this.datefin = datefin;
     }
     /**
@@ -224,7 +224,7 @@ public class Projet {
      * @param pourcentage pourcentage de l'employ"
      *  @param date date d'engagement
      */
-    public void addEmploye(Employe employe,int pourcentage,Date date){
+    public void addEmploye(Employe employe,int pourcentage,LocalDate date){
         Travail travail1 = new Travail(pourcentage,date,employe);
         travails.add(travail1);
     }

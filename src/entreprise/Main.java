@@ -1,7 +1,8 @@
 package entreprise;
 
 import java.text.DecimalFormat;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -9,8 +10,8 @@ public class Main {
         Projet projet = new Projet(
                 1,
                 "Projet1",
-                new Date(),
-                new Date(),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(1),
                 new DecimalFormat("#0.00")
         );
 

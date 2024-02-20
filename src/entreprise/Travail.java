@@ -1,8 +1,6 @@
 package entreprise;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 public class Travail {
 
@@ -24,7 +22,7 @@ public class Travail {
     /**
      * date d'engagement
      */
-    protected Date DateEngag;
+    protected LocalDate DateEngag;
 
     /**
      * Employe qui travaille
@@ -39,7 +37,7 @@ public class Travail {
      * @param employes employé qui travaille pour le projet
      * constructeur paramétré
      */
-    public Travail(int pourcentage,Date DateEngag,Employe employes){
+    public Travail(int pourcentage, LocalDate DateEngag, Employe employes){
         this.idTravail=nextId++;
         this.pourcentage=pourcentage;
         this.DateEngag=DateEngag;
@@ -84,7 +82,7 @@ public class Travail {
      * getter dateEngag
      * return la date d'engagement
      */
-    public Date getDateEngag() {
+    public LocalDate getDateEngag() {
         return DateEngag;
     }
 
@@ -92,7 +90,7 @@ public class Travail {
      * setter DateEngag
      * @param dateEngag de l'employé
      */
-    public void setDateEngag(Date dateEngag) {
+    public void setDateEngag(LocalDate dateEngag) {
         DateEngag = dateEngag;
     }
 
