@@ -2,6 +2,7 @@ package entreprise;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Disciplines {
 
@@ -110,5 +111,10 @@ public class Disciplines {
         if (o == null || getClass() != o.getClass()) return false;
         Disciplines disciplines = (Disciplines) o;
         return nom.equals(Disciplines.nom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idDisciplines, description, employes);
     }
 }

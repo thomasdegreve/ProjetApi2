@@ -178,6 +178,16 @@ public class Employe {
         this.specialite = specialite;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employe employe = (Employe) o;
+        return idEmploye == employe.idEmploye;
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(idEmploye);
+    }
 }

@@ -1,6 +1,7 @@
 package entreprise;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Investissement {
     /**
@@ -80,5 +81,18 @@ public class Investissement {
      */
     public void setSpecialite(Disciplines specialite) {
         this.specialite = specialite;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Investissement that = (Investissement) o;
+        return idInvest == that.idInvest;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idInvest);
     }
 }

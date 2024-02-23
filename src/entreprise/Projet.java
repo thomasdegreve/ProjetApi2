@@ -2,8 +2,7 @@ package entreprise;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Projet {
     /**
@@ -265,16 +264,16 @@ public class Projet {
 
     }
     /**
-     * fonction qui permet d'afficher la liste des specialités
-     * return la liste
-
+      * Retourne la liste des spécialités des employés travaillant sur le projet,
+     * chaque spécialité n'apparaît qu'une seule fois.
+     * @return un ensemble de spécialités
      */
-    public String listeSpecialite(){
-        List<String> specialites = new ArrayList<>();
-        for(Investissement inv : investissements){
-            specialites.add(inv.getSpecialite().getNom());
+    public Set<String> listeSpecialitesEmployes() {
+        Set<String> specialites = new HashSet<>();// hashSet permet de ne psa avoir de doublons
+        for(Travail travail : travails) {
+            specialites.add(travail.getEmployes().getDisciplines().getNom());
         }
-        return specialites.toString();
+        return specialites;
     }
     @Override
     public boolean equals(Object o) {
@@ -282,5 +281,10 @@ public class Projet {
         if (o == null || getClass() != o.getClass()) return false;
         Projet projet = (Projet) o;
         return nom.equals(projet.nom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idProjet);
     }
 }
