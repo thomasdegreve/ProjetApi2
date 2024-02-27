@@ -268,10 +268,10 @@ public class Projet {
      * chaque spécialité n'apparaît qu'une seule fois.
      * @return un ensemble de spécialités
      */
-    public Set<String> listeSpecialitesEmployes() {
-        Set<String> specialites = new HashSet<>();// hashSet permet de ne psa avoir de doublons
+    public Set<Disciplines> listeSpecialitesEmployes() {
+        Set<Disciplines> specialites = new HashSet<>();// hashSet permet de ne psa avoir de doublons
         for(Travail travail : travails) {
-            specialites.add(travail.getEmployes().getDisciplines().getNom());
+            specialites.add(travail.getEmployes().getDisciplines());
         }
         return specialites;
     }

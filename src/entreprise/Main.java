@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
- /*       // Création des disciplines
+      // Création des disciplines
         Disciplines discipline1 = new Disciplines(1, "Discipline1", "Description1");
         Disciplines discipline2 = new Disciplines(2, "Discipline2", "Description2");
 
@@ -30,9 +30,9 @@ public class Main {
         projet.getTravails().add(travail3);
 
         // Affichage des spécialités des employés travaillant sur le projet
-        Set<String> specialites = projet.listeSpecialitesEmployes();
+        Set<Disciplines> specialites = projet.listeSpecialitesEmployes();
         System.out.println("Liste des spécialités des employés travaillant sur le projet :");
-        for (String specialite : specialites) {
+        for (Disciplines specialite : specialites) {
             System.out.println(specialite);
         }
 
@@ -81,6 +81,6 @@ public class Main {
         projet.ListeEmployeEtPourcentageEtDate();
 
         // Calcul du pourcentage total
-        System.out.println("Pourcentage total : " + projet.totalPourcentage());*/
+        System.out.println("Pourcentage total : " + projet.totalPourcentage());
     }
 }
