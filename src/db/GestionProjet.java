@@ -2,6 +2,9 @@ package db;
 
 import myconnections.DBConnection;
 import myconnections.DBConnection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 import java.sql.*;
 import java.util.Scanner;
@@ -68,6 +71,7 @@ public class GestionProjet {
             String  date_fin = sc.nextLine();
             pstmt.setString(3, date_fin);
 
+
             System.out.println("cout : ");
             int couts = sc.nextInt();
             sc.nextLine();
@@ -77,7 +81,10 @@ public class GestionProjet {
 
             System.out.println("Projet ajoutée avec succès");
 
-        } catch (SQLException e) {
+        }
+     catch (SQLIntegrityConstraintViolationException e) {
+         System.out.println("Erreur : Violation de contrainte d'unicité sur le nom.");
+     }catch (SQLException e) {
             e.getMessage();
         }
     }
@@ -177,31 +184,34 @@ public class GestionProjet {
         }
     }
 
+
+
     private void tous() {
         String query = "SELECT * FROM API2PROJET";
         try (Statement stmt = dbConnect.createStatement();
              ResultSet rs = stmt.executeQuery(query);) {
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
             while (rs.next()) {
                 int id = rs.getInt("IDPROJET");
                 String nom = rs.getString("NOM");
-                String date_debut = rs.getString("DATEDEBUT");
-                String date_fin = rs.getString("DATEFIN");
+                LocalDate dateDebut = rs.getDate("DATEDEBUT").toLocalDate();
+                LocalDate dateFin = rs.getDate("DATEFIN").toLocalDate();
                 int couts = rs.getInt("cout");
 
                 System.out.println("------------------------------------------------");
                 System.out.println("ID: " + id);
-                System.out.println("nom: " + nom);
-                System.out.println("date de debut : " + date_debut);
-                System.out.println("date de fin: " + date_fin);
-                System.out.println("cout : " + couts);
+                System.out.println("Nom: " + nom);
+                System.out.println("Date de début : " + dateDebut.format(formatter));
+                System.out.println("Date de fin: " + dateFin.format(formatter));
+                System.out.println("Cout : " + couts);
             }
         } catch (SQLException e) {
             System.out.println("erreur SQL " + e);
         }
-
-
     }
+
 
 
     public static void main(String[] args) {
