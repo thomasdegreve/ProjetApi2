@@ -6,7 +6,7 @@ import java.util.PropertyResourceBundle;
 
 public class DBConnection {
 
-    private static Connection dbConnect = null;
+    public static Connection dbConnect = null;
 
     private DBConnection(){}
 

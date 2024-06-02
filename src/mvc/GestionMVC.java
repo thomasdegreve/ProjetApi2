@@ -115,7 +115,7 @@ public class GestionMVC {
         Travail t1 = new Travail(15, LocalDate.of(2023,5,6), e1);
         tm.add(t1);
 
-        Projet p1 = new Projet(1,"programme en c++", LocalDate.of(2024, 1, 1),LocalDate.of(2024,2,1),120.00 );
+        Projet p1 = new Projet(1, "programme en c++", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 2, 1), 120.00);
         pm.add(p1);
 
 

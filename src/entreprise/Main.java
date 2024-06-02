@@ -22,7 +22,7 @@ public class Main {
         Travail travail3 = new Travail(20, LocalDate.now(), employe3);
 
         // Création d'un projet
-        Projet projet = new Projet(1, "Projet1", LocalDate.now(), LocalDate.now().plusMonths(1), null);
+        Projet projet = new Projet(1, "Projet1", LocalDate.now(), LocalDate.now().plusMonths(1), 1.00);
 
         // Ajout des travaux au projet
         projet.getTravails().add(travail1);

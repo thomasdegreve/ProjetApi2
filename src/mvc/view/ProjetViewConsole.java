@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Scanner;
 import static Utilitaire.Utilitaire.*;
 
-
-
 public class ProjetViewConsole extends AbstractView<Projet> {
     Scanner sc = new Scanner(System.in);
 
@@ -81,10 +79,11 @@ public class ProjetViewConsole extends AbstractView<Projet> {
                 String nom = modifyIfNotBlank("nom", p.getNom());
                 LocalDate datedebut = LocalDate.parse(modifyIfNotBlank("date de début (AAAA-MM-JJ)", p.getDatedebut().toString()));
                 LocalDate datefin = LocalDate.parse(modifyIfNotBlank("date de fin (AAAA-MM-JJ)", p.getDatefin().toString()));
-                DecimalFormat cout = p.getCout(); // You may want to allow modifying the cost too
+                double cout = Double.parseDouble(modifyIfNotBlank("coût", String.valueOf(p.getCout())));
                 p.setNom(nom);
                 p.setDatedebut(datedebut);
                 p.setDatefin(datefin);
+                p.setCout(cout);
                 break;
             } catch (Exception e) {
                 System.out.println("Erreur : " + e);
@@ -103,12 +102,13 @@ public class ProjetViewConsole extends AbstractView<Projet> {
                 LocalDate datedebut = LocalDate.parse(sc.nextLine());
                 System.out.println("Date de fin (AAAA-MM-JJ) : ");
                 LocalDate datefin = LocalDate.parse(sc.nextLine());
-                // Dummy cost for now, you may want to implement cost management too
-                DecimalFormat cout = new DecimalFormat("#.##");
+                System.out.println("Coût : ");
+                double cout = Double.parseDouble(sc.nextLine());
                 p = new Projet(0, nom, datedebut, datefin, cout);
                 break;
             } catch (Exception e) {
                 System.out.println("Une erreur est survenue : " + e.getMessage());
+                sc.nextLine(); // clear the buffer
             }
         } while (true);
         controller.add(p);

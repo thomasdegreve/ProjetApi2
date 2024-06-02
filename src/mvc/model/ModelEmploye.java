@@ -2,6 +2,7 @@ package mvc.model;
 
 import entreprise.Employe;
 import entreprise.Travail;
+import mvc.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,10 @@ public class ModelEmploye extends DAO<Employe> implements DAOSpecialEmploye{
             notifyObservers();
             return elt;
         } else return null;
+    }public void notifyObservers(){
+        List<Observer> myObservers = new ArrayList<>();
+        List l =getNotification();
+        for(Observer o : myObservers) o.update(l);
     }
 
     @Override

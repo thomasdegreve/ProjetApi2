@@ -1,6 +1,7 @@
 package mvc.model;
 
 import entreprise.Investissement;
+import mvc.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,11 @@ public class ModelInvestissement extends DAO<Investissement> implements DAOSpeci
         if (p < 0) return null;
         return ldatas.get(p);
     }
-
+    public void notifyObservers(){
+        List<Observer> myObservers = new ArrayList<>();
+        List l =getNotification();
+        for(Observer o : myObservers) o.update(l);
+    }
     @Override
     public List<Investissement> getAll() {
         return ldatas;

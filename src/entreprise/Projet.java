@@ -1,6 +1,5 @@
 package entreprise;
 
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -24,7 +23,7 @@ public class Projet {
     /**
      * cout du projet
      */
-    protected DecimalFormat cout;
+    protected double cout;
 
     /**
      * liste des investissements pour le projet
@@ -44,7 +43,7 @@ public class Projet {
      * @param cout cout du projet/**
      * constructeur paramétré
      */
-    public Projet(int idProjet,String nom,LocalDate datedebut,LocalDate datefin,DecimalFormat cout){
+    public Projet(int idProjet, String nom, LocalDate datedebut, LocalDate datefin, Double cout){
         this.idProjet=idProjet;
         this.nom=nom;
         this.datedebut=datedebut;
@@ -112,14 +111,14 @@ public class Projet {
      * getter cout
      * return les couts du projet
      */
-    public DecimalFormat getCout() {
+    public double getCout() {
         return cout;
     }
     /**
      * setter cout
      * @param cout cout du projet
      */
-    public void setCout(DecimalFormat cout) {
+    public void setCout(double cout) {
         this.cout = cout;
     }
     /**

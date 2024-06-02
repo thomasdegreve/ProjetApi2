@@ -117,4 +117,8 @@ public class Disciplines {
     public int hashCode() {
         return Objects.hash(idDisciplines, description, employes);
     }
+
+    public int getId() {
+        return 0;
+    }
 }
