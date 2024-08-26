@@ -1,19 +1,20 @@
 package mvc.controller;
 
+import entreprise.Travail;
 import entreprise.Employe;
 import entreprise.Projet;
-import entreprise.Travail;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface ControllerSpecialTravail {
 
-    void addTravailToProject(Employe employe, int pourcentage, Projet projet);
 
-    void removeTravailFromProject(Employe employe, Projet projet);
+    public List<Travail> listerTravaux(Employe e);
 
-    void updateTravailPourcentage(Employe employe, int pourcentage, Projet projet);
 
-    List<Travail> getAllTravailsForProject(Projet projet);
+    public List<Travail> listerTravaux(Projet p);
 
+
+    List<Travail> filtrerTravaux(Predicate<Travail> pr);
 }

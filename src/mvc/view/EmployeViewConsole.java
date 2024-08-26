@@ -1,23 +1,31 @@
 package mvc.view;
 
 import entreprise.Employe;
+import entreprise.Disciplines;
 import mvc.controller.ControllerSpecialEmploye;
-import mvc.controller.EmployeController;
-import mvc.view.AbstractView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 import static Utilitaire.Utilitaire.*;
 
 public class EmployeViewConsole extends AbstractView<Employe> {
-    Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     @Override
     public void menu() {
         update(controller.getAll());
-        List<String> options = Arrays.asList("ajouter", "retirer", "rechercher", "modifier", "fin");
+        List<String> options = Arrays.asList(
+                "Ajouter",
+                "Retirer",
+                "Rechercher",
+                "Modifier",
+                "Rechercher par nom",
+                "Afficher",
+                "Fin"
+        );
         do {
             int ch = choixListe(options);
 
@@ -35,23 +43,34 @@ public class EmployeViewConsole extends AbstractView<Employe> {
                     modifier();
                     break;
                 case 5:
+                    rechNom();
+                    break;
+                case 6:
+                    afficher();
+                    break;
+                case 7:
                     return;
             }
         } while (true);
     }
 
-    @Override
-    public void affList(List la) {
-
+    private void rechNom() {
+        System.out.println("Nom recherché :");
+        String nomRecherche = sc.nextLine();
+        List<Employe> le = ((ControllerSpecialEmploye)controller).filtrerEmployes(e -> e.getNom().startsWith(nomRecherche));
+        if (le.isEmpty()) {
+            System.out.println("Aucun résultat trouvé.");
+            return;
+        }
+        int ch = choixListe(le);
+        if (ch != 0) special(le.get(ch - 1));
     }
-
 
     private void retirer() {
         int nl = choixElt(la) - 1;
         Employe e = la.get(nl);
         boolean ok = controller.remove(e);
-        if (ok) affMsg("employé retiré");
-        else affMsg("employé non retiré");
+        affMsg(ok ? "Employé effacé." : "Employé non effacé.");
     }
 
     private void affMsg(String msg) {
@@ -60,27 +79,48 @@ public class EmployeViewConsole extends AbstractView<Employe> {
 
     public void rechercher() {
         try {
-            System.out.println("Nom : ");
-            String nom = sc.nextLine();
-            System.out.println("Matricule : ");
-            String matricule = sc.nextLine();
-            // Vous pouvez ajuster la création de l'objet Employe selon vos besoins
-            Employe rech = new Employe(0, matricule, nom, "", "", "", null);
+            System.out.println("Matricule :");
+            String matricule = sc.nextLine().trim();
+            Employe rech = new Employe(0, matricule, "", "", "", "", null);
             Employe e = controller.search(rech);
-            if (e == null) affMsg("Employé non trouvé");
-            else {
+
+            if (e == null) {
+                affMsg("Employé inconnu.");
+            } else {
                 affMsg(e.toString());
                 special(e);
             }
         } catch (Exception e) {
-            System.out.println("Erreur : " + e);
+            System.out.println("Erreur : " + e.getMessage());
         }
     }
 
     public void modifier() {
         int choix = choixElt(la);
         Employe e = la.get(choix - 1);
-        // Implémentez la logique de modification ici
+        do {
+            try {
+                String matricule = modifyIfNotBlank("Matricule", e.getMatricule());
+                String nom = modifyIfNotBlank("Nom", e.getNom());
+                String prenom = modifyIfNotBlank("Prénom", e.getPrenom());
+                String tel = modifyIfNotBlank("Téléphone", e.getTel());
+                String mail = modifyIfNotBlank("Mail", e.getMail());
+                String specialiteNom = modifyIfNotBlank("Spécialité", e.getDisciplines() != null ? e.getDisciplines().getNom() : "");
+
+                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for specialite
+
+                e.setMatricule(matricule);
+                e.setNom(nom);
+                e.setPrenom(prenom);
+                e.setTel(tel);
+                e.setMail(mail);
+                e.setDisciplines(specialite);
+
+                break;
+            } catch (Exception ex) {
+                System.out.println("Erreur : " + ex);
+            }
+        } while (true);
         controller.update(e);
     }
 
@@ -88,13 +128,22 @@ public class EmployeViewConsole extends AbstractView<Employe> {
         Employe e;
         do {
             try {
-                // Saisie des informations pour créer un nouvel employé
-                System.out.println("Nom : ");
-                String nom = sc.nextLine();
-                System.out.println("Matricule : ");
+                System.out.println("Matricule :");
                 String matricule = sc.nextLine();
-                // Vous pouvez ajuster la création de l'objet Employe selon vos besoins
-                e = new Employe(0, matricule, nom, "", "", "", null);
+                System.out.println("Nom :");
+                String nom = sc.nextLine();
+                System.out.println("Prénom :");
+                String prenom = sc.nextLine();
+                System.out.println("Téléphone :");
+                String tel = sc.nextLine();
+                System.out.println("Mail :");
+                String mail = sc.nextLine();
+                System.out.println("Spécialité (Nom) :");
+                String specialiteNom = sc.nextLine();
+
+                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for specialite
+
+                e = new Employe(0, matricule, nom, prenom, tel, mail, specialite);
                 break;
             } catch (Exception ex) {
                 System.out.println("Une erreur est survenue : " + ex.getMessage());
@@ -104,11 +153,43 @@ public class EmployeViewConsole extends AbstractView<Employe> {
     }
 
     public void special(Employe e) {
+        List<String> options = Arrays.asList("Lister travaux", "Fin");
+        do {
+            int ch = choixListe(options);
 
+            switch (ch) {
+                case 1:
+                    listerTravaux(e);
+                    break;
+                case 2:
+                    return;
+            }
+        } while (true);
+    }
+
+    public void listerTravaux(Employe e) {
+        affList(new ArrayList<>(((ControllerSpecialEmploye)controller).listerTravaux(e)));
+    }
+
+    private void afficher() {
+        int choix = choixElt(la); // Sélectionne l'employé à afficher
+        if (choix > 0 && choix <= la.size()) {
+            Employe e = la.get(choix - 1);
+            affMsg(e.toString()); // Affiche les détails de l'employé
+        } else {
+            affMsg("Choix invalide.");
+        }
     }
 
 
-
-
+    public void affList(List la) {
+        if (la.isEmpty()) {
+            System.out.println("Aucun employé à afficher.");
+            return;
+        }
+        for (int i = 0; i < la.size(); i++) {
+            System.out.println((i + 1) + ". " + la.get(i).toString());
+        }
+    }
 
 }

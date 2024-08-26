@@ -1,51 +1,51 @@
 package mvc.model;
 
+import entreprise.Disciplines;
 import entreprise.Employe;
+import entreprise.Projet;
 import entreprise.Travail;
-import mvc.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
-public class ModelEmploye extends DAO<Employe> implements DAOSpecialEmploye{
+public class ModelEmploye extends DAO<Employe> implements DAOSpecialEmploye {
 
     private List<Employe> ldatas = new ArrayList<>();
 
     @Override
     public Employe add(Employe elt) {
-        boolean present = ldatas.contains(elt);
-        if (!present) {
+        if (!ldatas.contains(elt)) {
             ldatas.add(elt);
             notifyObservers();
             return elt;
-        } else return null;
-    }public void notifyObservers(){
-        List<Observer> myObservers = new ArrayList<>();
-        List l =getNotification();
-        for(Observer o : myObservers) o.update(l);
+        }
+        return null;
     }
 
     @Override
     public boolean remove(Employe elt) {
         boolean ok = ldatas.remove(elt);
-        notifyObservers();
+
         return ok;
     }
 
     @Override
     public Employe update(Employe elt) {
-        int p = ldatas.indexOf(elt);
-        if (p < 0) return null;
-        ldatas.set(p, elt);
-        notifyObservers();
-        return elt;
+        int index = ldatas.indexOf(elt);
+        if (index >= 0) {
+            ldatas.set(index, elt);
+            notifyObservers();
+            return elt;
+        }
+        return null;
     }
 
     @Override
     public Employe read(Employe rech) {
-        int p = ldatas.indexOf(rech);
-        if (p < 0) return null;
-        return ldatas.get(p);
+        int index = ldatas.indexOf(rech);
+        return index >= 0 ? ldatas.get(index) : null;
     }
 
     @Override
@@ -54,32 +54,19 @@ public class ModelEmploye extends DAO<Employe> implements DAOSpecialEmploye{
     }
 
     @Override
-    public List<Travail> listerTravaux(Employe employe) {
+    public Set<Projet> listerProjets(Employe e) {
         return null;
     }
 
     @Override
-    public List<Employe> getEmployes() {
+    public Set<Disciplines> listerDisciplines(Employe e) {
         return null;
     }
 
     @Override
-    public Employe addEmploye(Employe employe) {
-        return null;
-    }
-
-    @Override
-    public boolean removeEmploye(Employe employe) {
-        return false;
-    }
-
-    @Override
-    public Employe updateEmploye(Employe employe) {
-        return null;
-    }
-
-    @Override
-    public Employe readEmploye(int idEmploye) {
-        return null;
+    public List<Employe> filtrerEmployes(Predicate<Employe> predicate) {
+        List<Employe> result = new ArrayList<>();
+        ldatas.stream().filter(predicate).forEach(result::add);
+        return result;
     }
 }

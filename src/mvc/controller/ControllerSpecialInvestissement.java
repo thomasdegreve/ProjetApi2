@@ -1,16 +1,20 @@
 package mvc.controller;
 
-import entreprise.Disciplines;
 import entreprise.Investissement;
+import entreprise.Projet;
+import entreprise.Disciplines;
 
-import java.util.Set;
+import java.util.List;
+import java.util.function.Predicate;
 
 public interface ControllerSpecialInvestissement {
 
-    void addDisciplineToInvestissement(Disciplines discipline, int quantite, Investissement investissement);
 
-    void removeDisciplineFromInvestissement(Disciplines discipline, Investissement investissement);
+    public List<Investissement> listerInvestissements(Projet p);
 
-    Set<Disciplines> getSpecialitesEmployesForInvestissement(Investissement investissement);
 
+    public List<Investissement> listerInvestissements(Disciplines d);
+
+
+    List<Investissement> filtrerInvestissements(Predicate<Investissement> pr);
 }

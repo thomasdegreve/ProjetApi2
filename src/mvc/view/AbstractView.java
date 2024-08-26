@@ -20,9 +20,9 @@ public abstract  class AbstractView<T> implements Observer {
 
     public abstract void affList(List la);
 
-    public List<T> getAll(){
-        Comparator<T> comparator;
-        return null;
+    public List<T> getAll(Comparator<T> cmp){
+        la.sort(cmp);
+        return la;
     }
     @Override
     public void update(List la) {

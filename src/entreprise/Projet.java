@@ -28,7 +28,7 @@ public class Projet {
     /**
      * liste des investissements pour le projet
      */
-    protected List<Investissement> investissements=new ArrayList<>();
+    protected static List<Investissement> investissements=new ArrayList<>();
     /**
      * liste des travaux du projet
      */
@@ -49,6 +49,26 @@ public class Projet {
         this.datedebut=datedebut;
         this.datefin=datefin;
         this.cout=cout;
+    }
+
+    public static boolean removeInvestissement(Investissement elt) {
+        
+           
+            boolean removed = investissements.remove(investissements);
+
+        
+            if (removed) {
+
+                notifyObservers(); 
+            }
+
+           
+            return removed;
+        
+
+    }
+
+    private static void notifyObservers() {
     }
 
     /**
@@ -189,7 +209,7 @@ public class Projet {
     public void modifDisciplines(Disciplines disciplines,int quantite){
         for(Investissement inv : investissements){
             if(inv.getSpecialite().equals(disciplines)){
-                inv.setQuantiteJH(quantite);
+                inv.setQuantiteJH(String.valueOf(quantite));
                 return;
             }
         }

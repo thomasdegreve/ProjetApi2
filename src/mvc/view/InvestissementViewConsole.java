@@ -3,23 +3,28 @@ package mvc.view;
 import entreprise.Disciplines;
 import entreprise.Investissement;
 import mvc.controller.ControllerSpecialInvestissement;
-import mvc.controller.InvestissementController;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 import static Utilitaire.Utilitaire.*;
 
-
-
 public class InvestissementViewConsole extends AbstractView<Investissement> {
-    Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     @Override
     public void menu() {
         update(controller.getAll());
-        List<String> options = Arrays.asList("ajouter", "retirer", "rechercher", "modifier", "fin");
+        List<String> options = Arrays.asList(
+                "ajouter",
+                "retirer",
+                "rechercher",
+                "modifier",
+
+                "rechercher par spécialité",
+                "fin"
+        );
         do {
             int ch = choixListe(options);
 
@@ -36,10 +41,28 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
                 case 4:
                     modifier();
                     break;
+
                 case 5:
+                    rechSpecialite();
+                    break;
+                case 6:
                     return;
             }
         } while (true);
+    }
+
+
+
+    private void rechSpecialite() {
+        System.out.println("Nom spécialité :");
+        String specialiteNom = sc.nextLine();
+        List<Investissement> li = ((ControllerSpecialInvestissement)controller).filtrerInvestissements(i -> i.getSpecialite().getNom().startsWith(specialiteNom));
+        if (li.isEmpty()) {
+            System.out.println("Aucun résultat trouvé");
+            return;
+        }
+        int ch = choixListe(li);
+        if (ch != 0) special(li.get(ch - 1));
     }
 
     private void retirer() {
@@ -56,18 +79,23 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
 
     public void rechercher() {
         try {
-            System.out.println("ID de l'investissement : ");
-            int id = Integer.parseInt(sc.nextLine());
-            Investissement rech = new Investissement(0, null); // Dummy investment for searching by id
-            rech.setIdInvest(id);
+            System.out.println("Quantité JH :");
+            int quantiteJH = sc.nextInt();
+            sc.nextLine(); // Consume newline
+            System.out.println("Nom spécialité :");
+            String specialiteNom = sc.nextLine();
+            Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for Disciplines
+
+            Investissement rech = new Investissement(quantiteJH, specialite);
             Investissement i = controller.search(rech);
+
             if (i == null) affMsg("Investissement inconnu");
             else {
                 affMsg(i.toString());
                 special(i);
             }
         } catch (Exception e) {
-            System.out.println("Erreur : " + e);
+            System.out.println("Erreur : " + e.getMessage());
         }
     }
 
@@ -76,28 +104,33 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
         Investissement i = la.get(choix - 1);
         do {
             try {
-                int quantiteJH = Integer.parseInt(modifyIfNotBlank("quantité en JH", String.valueOf(i.getQuantiteJH())));
-                String specialiteNom = modifyIfNotBlank("spécialité (nom)", i.getSpecialite().getNom());
-                Disciplines specialite = new Disciplines(0, specialiteNom, null); // Creating a dummy discipline for now
-                i.setQuantiteJH(Integer.parseInt(String.valueOf(quantiteJH)));
+                String quantiteJH = modifyIfNotBlank("Quantité JH", i.getQuantiteJH());
+                String specialiteNom = modifyIfNotBlank("Nom spécialité", i.getSpecialite().getNom());
+                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for Disciplines
+
+                i.setQuantiteJH(quantiteJH);
                 i.setSpecialite(specialite);
                 break;
             } catch (Exception e) {
-                System.out.println("Erreur : " + e);
+                System.out.println("Erreur : " + e.getMessage());
             }
         } while (true);
         controller.update(i);
     }
 
+
+
     public void ajouter() {
         Investissement i;
         do {
             try {
-                System.out.println("Quantité en JH : ");
-                int quantiteJH = Integer.parseInt(sc.nextLine());
-                System.out.println("Spécialité (nom) : ");
+                System.out.println("Quantité JH :");
+                int quantiteJH = sc.nextInt();
+                sc.nextLine();
+                System.out.println("Nom spécialité :");
                 String specialiteNom = sc.nextLine();
-                Disciplines specialite = new Disciplines(0, specialiteNom, null); // Creating a dummy discipline for now
+                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for Disciplines
+
                 i = new Investissement(quantiteJH, specialite);
                 break;
             } catch (Exception e) {
@@ -108,13 +141,13 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
     }
 
     public void special(Investissement i) {
-        List<String> options = Arrays.asList("afficher spécialité", "fin");
+        List<String> options = Arrays.asList("Afficher détails spécialité", "Fin");
         do {
             int ch = choixListe(options);
 
             switch (ch) {
                 case 1:
-                    afficherSpecialite(i);
+                    affMsg("Spécialité: " + i.getSpecialite().toString());
                     break;
                 case 2:
                     return;
@@ -122,14 +155,8 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
         } while (true);
     }
 
-    public void afficherSpecialite(Investissement i) {
-        affMsg(i.getSpecialite().toString());
-    }
-
     @Override
     public void affList(List la) {
         affListe(la);
     }
-
-
 }

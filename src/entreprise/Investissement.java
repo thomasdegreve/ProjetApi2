@@ -1,6 +1,5 @@
 package entreprise;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Investissement {
@@ -55,16 +54,16 @@ public class Investissement {
      * getter QuantiteJH
      * return la quantite en JH
      */
-    public int getQuantiteJH() {
-        return quantiteJH;
+    public String getQuantiteJH() {
+        return String.valueOf(quantiteJH);
     }
 
     /**
      * setter quantiteJH
      * @param quantiteJH la quantite en jh
      */
-    public void setQuantiteJH(int quantiteJH) {
-        this.quantiteJH = quantiteJH;
+    public void setQuantiteJH(String quantiteJH) {
+        this.quantiteJH = Integer.parseInt(quantiteJH);
     }
 
     /**
@@ -94,5 +93,9 @@ public class Investissement {
     @Override
     public int hashCode() {
         return Objects.hash(idInvest);
+    }
+
+    public Object getProjet() {
+        return null;
     }
 }

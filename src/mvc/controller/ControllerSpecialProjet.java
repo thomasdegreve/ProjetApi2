@@ -1,16 +1,25 @@
 package mvc.controller;
 
-import entreprise.Disciplines;
 import entreprise.Projet;
+import entreprise.Employe;
+import entreprise.Disciplines;
 
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public interface ControllerSpecialProjet {
 
-    void addDisciplineToProject(Disciplines discipline, int quantite, Projet projet);
 
-    void removeDisciplineFromProject(Disciplines discipline, Projet projet);
+    public Set<Employe> listerEmployes(Projet p);
 
-    Set<Disciplines> getSpecialitesEmployesForProject(Projet projet);
 
+    public Set<Disciplines> listerDisciplines(Projet p);
+
+
+    List<Projet> filtrerProjets(Predicate<Projet> pr);
+
+    int listerTravaux(Projet p);
+
+    int listerInvestissements(Projet p);
 }

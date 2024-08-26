@@ -6,14 +6,14 @@ import java.util.PropertyResourceBundle;
 
 public class DBConnection {
 
-    public static Connection dbConnect = null;
+    private static Connection dbConnect = null;
 
-    private DBConnection(){}
-
+    private DBConnection() {
+    }
 
 
     public static Connection getConnection() {
-        if (dbConnect!=null)return dbConnect;
+        if (dbConnect != null) return dbConnect;
         PropertyResourceBundle properties =
                 (PropertyResourceBundle) PropertyResourceBundle.getBundle("resources.application");
         //nom du fichier properties à utiliser
@@ -35,14 +35,13 @@ public class DBConnection {
         }
     }
 
-    public static void closeConnection(){
+    public static void closeConnection() {
 
-        try{
+        try {
             dbConnect.close();
+        } catch (Exception e) {
+            System.out.println("erreur de fermeture de connexion " + e);
         }
-        catch(Exception e){
-            System.out.println("erreur de fermeture de connexion "+e);
-        }
-        dbConnect=null;
+        dbConnect = null;
     }
 }

@@ -3,51 +3,46 @@ package mvc.model;
 import entreprise.Employe;
 import entreprise.Projet;
 import entreprise.Travail;
-import mvc.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class ModelTravail extends DAO<Travail> implements DAOSpecialTravail{
+public class ModelTravail extends DAO<Travail> implements DAOSpecialTravail {
 
     private List<Travail> ldatas = new ArrayList<>();
 
     @Override
     public Travail add(Travail elt) {
-        boolean present = ldatas.contains(elt);
-        if (!present) {
+        if (!ldatas.contains(elt)) {
             ldatas.add(elt);
             notifyObservers();
             return elt;
-        } else return null;
+        }
+        return null;
     }
 
     @Override
     public boolean remove(Travail elt) {
-        boolean ok = ldatas.remove(elt);
-        notifyObservers();
-        return ok;
+        return false;
     }
+
 
     @Override
     public Travail update(Travail elt) {
-        int p = ldatas.indexOf(elt);
-        if (p < 0) return null;
-        ldatas.set(p, elt);
-        notifyObservers();
-        return elt;
+        int index = ldatas.indexOf(elt);
+        if (index >= 0) {
+            ldatas.set(index, elt);
+            notifyObservers();
+            return elt;
+        }
+        return null;
     }
 
     @Override
     public Travail read(Travail rech) {
-        int p = ldatas.indexOf(rech);
-        if (p < 0) return null;
-        return ldatas.get(p);
-    }
-    public void notifyObservers(){
-        List<Observer> myObservers = new ArrayList<>();
-        List l =getNotification();
-        for(Observer o : myObservers) o.update(l);
+        int index = ldatas.indexOf(rech);
+        return index >= 0 ? ldatas.get(index) : null;
     }
 
     @Override
@@ -55,38 +50,25 @@ public class ModelTravail extends DAO<Travail> implements DAOSpecialTravail{
         return ldatas;
     }
 
+
+    public List<Travail> filtrerTravails(Predicate<Travail> predicate) {
+        List<Travail> result = new ArrayList<>();
+        ldatas.stream().filter(predicate).forEach(result::add);
+        return result;
+    }
+
     @Override
-    public List<Projet> listerProjets(Employe employe) {
+    public List<Travail> listerTravaux(Employe e) {
         return null;
     }
 
     @Override
-    public List<Employe> listerEmployes(Projet projet) {
+    public List<Travail> listerTravaux(Projet p) {
         return null;
     }
 
     @Override
-    public List<Travail> getTravails() {
-        return null;
-    }
-
-    @Override
-    public Travail addTravail(Travail travail) {
-        return null;
-    }
-
-    @Override
-    public boolean removeTravail(Travail travail) {
-        return false;
-    }
-
-    @Override
-    public Travail updateTravail(Travail travail) {
-        return null;
-    }
-
-    @Override
-    public Travail readTravail(int idTravail) {
+    public List<Travail> filtrerTravaux(Predicate<Travail> pr) {
         return null;
     }
 }

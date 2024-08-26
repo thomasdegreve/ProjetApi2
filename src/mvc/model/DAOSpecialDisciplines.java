@@ -2,19 +2,19 @@ package mvc.model;
 
 import entreprise.Disciplines;
 import entreprise.Employe;
+import entreprise.Projet;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
-public interface DAOSpecialDisciplines {
-    List<Employe> listerEmployes(Disciplines discipline);
+public interface DAOSpecialDisciplines  {
 
-    List<Disciplines> getDiscipline();
+    Set<Employe> listerEmployes(Disciplines d);
 
-    Disciplines addDiscipline(Disciplines discipline);
+    Set<Projet> listerProjets(Disciplines d);
 
-    boolean removeDiscipline(Disciplines discipline);
+    List<Projet> listerProjets(Disciplines d, double minBudget, double maxBudget);
 
-    Disciplines updateDiscipline(Disciplines discipline);
-
-    Disciplines readDiscipline(int idDiscipline);
+    List<Disciplines> filtrerDisciplines(Predicate<Disciplines> pr);
 }

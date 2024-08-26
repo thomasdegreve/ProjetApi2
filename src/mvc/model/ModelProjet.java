@@ -1,48 +1,58 @@
 package mvc.model;
 
-import entreprise.Investissement;
+import entreprise.Disciplines;
+import entreprise.Employe;
 import entreprise.Projet;
 import entreprise.Travail;
-import mvc.observer.Observer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
-public class ModelProjet extends DAO<Projet> implements DAOSpecialProjet{
+public class ModelProjet extends DAO<Projet> implements DAOSpecialProjet {
 
     private List<Projet> ldatas = new ArrayList<>();
 
     @Override
     public Projet add(Projet elt) {
-        boolean present = ldatas.contains(elt);
-        if (!present) {
+        if (!ldatas.contains(elt)) {
             ldatas.add(elt);
             notifyObservers();
             return elt;
-        } else return null;
+        }
+        return null;
     }
 
     @Override
     public boolean remove(Projet elt) {
         boolean ok = ldatas.remove(elt);
+        /*Iterator<Travail> it = elt.getTravails().iterator();
+        while (it.hasNext()) {
+            Travail t = it.next();
+            it.remove();
+            t.setProjet(null);
+        }*/
         notifyObservers();
         return ok;
     }
 
     @Override
     public Projet update(Projet elt) {
-        int p = ldatas.indexOf(elt);
-        if (p < 0) return null;
-        ldatas.set(p, elt);
-        notifyObservers();
-        return elt;
+        int index = ldatas.indexOf(elt);
+        if (index >= 0) {
+            ldatas.set(index, elt);
+            notifyObservers();
+            return elt;
+        }
+        return null;
     }
 
     @Override
     public Projet read(Projet rech) {
-        int p = ldatas.indexOf(rech);
-        if (p < 0) return null;
-        return ldatas.get(p);
+        int index = ldatas.indexOf(rech);
+        return index >= 0 ? ldatas.get(index) : null;
     }
 
     @Override
@@ -51,42 +61,19 @@ public class ModelProjet extends DAO<Projet> implements DAOSpecialProjet{
     }
 
     @Override
-    public List<Investissement> listerInvestissements(Projet projet) {
+    public Set<Employe> listerEmployes(Projet p) {
         return null;
     }
 
     @Override
-    public List<Travail> listerTravail(Projet projet) {
+    public Set<Disciplines> listerDisciplines(Projet p) {
         return null;
     }
 
     @Override
-    public List<Projet> getProjets() {
-        return null;
-    }
-
-    @Override
-    public Projet addProjet(Projet projet) {
-        return null;
-    }
-    public void notifyObservers(){
-        List<Observer> myObservers = new ArrayList<>();
-        List l =getNotification();
-        for(Observer o : myObservers) o.update(l);
-    }
-
-    @Override
-    public boolean removeProjet(Projet projet) {
-        return false;
-    }
-
-    @Override
-    public Projet updateProjet(Projet projet) {
-        return null;
-    }
-
-    @Override
-    public Projet readProjet(int idProjet) {
-        return null;
+    public List<Projet> filtrerProjets(Predicate<Projet> predicate) {
+        List<Projet> result = new ArrayList<>();
+        ldatas.stream().filter(predicate).forEach(result::add);
+        return result;
     }
 }

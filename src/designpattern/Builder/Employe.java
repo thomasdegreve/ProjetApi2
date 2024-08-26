@@ -72,7 +72,7 @@ public class Employe {
         return specialite;
     }
 
-    // Builder static class
+
     public static class Builder {
         private final String matricule;
         private final String nom;

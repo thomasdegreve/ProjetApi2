@@ -190,4 +190,9 @@ public class Employe {
     public int hashCode() {
         return Objects.hash(idEmploye);
     }
+
+    public Iterable<Object> getTravails() {
+
+        return null;
+    }
 }

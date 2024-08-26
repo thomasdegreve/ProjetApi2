@@ -1,16 +1,15 @@
 package mvc.view;
 
-import entreprise.Disciplines;
-import entreprise.Investissement;
 import entreprise.Projet;
 import mvc.controller.ControllerSpecialProjet;
 
-import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 import static Utilitaire.Utilitaire.*;
 
 public class ProjetViewConsole extends AbstractView<Projet> {
@@ -19,7 +18,7 @@ public class ProjetViewConsole extends AbstractView<Projet> {
     @Override
     public void menu() {
         update(controller.getAll());
-        List<String> options = Arrays.asList("ajouter", "retirer", "rechercher", "modifier", "fin");
+        List<String> options = Arrays.asList("ajouter", "retirer", "rechercher", "modifier", "rechercher par nom",  "fin");
         do {
             int ch = choixListe(options);
 
@@ -37,17 +36,40 @@ public class ProjetViewConsole extends AbstractView<Projet> {
                     modifier();
                     break;
                 case 5:
+                    rechNom();
+                    break;
+
+                case 6:
                     return;
             }
         } while (true);
+    }
+
+    @Override
+    public void affList(List la) {
+
+    }
+
+
+
+    private void rechNom() {
+        System.out.println("Nom recherché :");
+        String nrech = sc.nextLine();
+        List<Projet> lp = ((ControllerSpecialProjet) controller).filtrerProjets(p -> p.getNom().startsWith(nrech));
+        if (lp.isEmpty()) {
+            System.out.println("Aucun résultat trouvé");
+            return;
+        }
+        int ch = choixListe(lp);
+        if (ch != 0) special(lp.get(ch - 1));
     }
 
     private void retirer() {
         int nl = choixElt(la) - 1;
         Projet p = la.get(nl);
         boolean ok = controller.remove(p);
-        if (ok) affMsg("Projet retiré");
-        else affMsg("Impossible de retirer le projet");
+        if (ok) affMsg("Projet effacé");
+        else affMsg("Projet non effacé");
     }
 
     private void affMsg(String msg) {
@@ -56,12 +78,14 @@ public class ProjetViewConsole extends AbstractView<Projet> {
 
     public void rechercher() {
         try {
-            System.out.println("ID du projet : ");
-            int id = Integer.parseInt(sc.nextLine());
-            Projet rech = new Projet(id, null, null, null, null); // Dummy project for searching by id
-            rech.setIdProjet(id);
+            System.out.println("Nom :");
+            String nom = sc.nextLine();
+            System.out.println("Type :");
+            String type = sc.nextLine();
+            // Assuming Projet has a constructor matching these parameters
+            Projet rech = new Projet(0, nom, LocalDate.now(), LocalDate.now(), 0.0); // Default values for now
             Projet p = controller.search(rech);
-            if (p == null) affMsg("Projet introuvable");
+            if (p == null) affMsg("Projet inconnu");
             else {
                 affMsg(p.toString());
                 special(p);
@@ -74,109 +98,93 @@ public class ProjetViewConsole extends AbstractView<Projet> {
     public void modifier() {
         int choix = choixElt(la);
         Projet p = la.get(choix - 1);
-        do {
+
+        while (true) {
             try {
-                String nom = modifyIfNotBlank("nom", p.getNom());
-                LocalDate datedebut = LocalDate.parse(modifyIfNotBlank("date de début (AAAA-MM-JJ)", p.getDatedebut().toString()));
-                LocalDate datefin = LocalDate.parse(modifyIfNotBlank("date de fin (AAAA-MM-JJ)", p.getDatefin().toString()));
-                double cout = Double.parseDouble(modifyIfNotBlank("coût", String.valueOf(p.getCout())));
+
+                String nom = modifyIfNotBlank("Nom", p.getNom());
+
+
+
+                String datedebutStr = modifyIfNotBlank("Date début (YYYY-MM-DD)", p.getDatedebut().toString());
+                LocalDate datedebut = datedebutStr.isEmpty() ? p.getDatedebut() : LocalDate.parse(datedebutStr);
+
+                String datefinStr = modifyIfNotBlank("Date fin (YYYY-MM-DD)", p.getDatefin().toString());
+                LocalDate datefin = datefinStr.isEmpty() ? p.getDatefin() : LocalDate.parse(datefinStr);
+
+
+                String coutStr = modifyIfNotBlank("Coût", String.valueOf(p.getCout()));
+                double cout = coutStr.isEmpty() ? p.getCout() : Double.parseDouble(coutStr);
+
+
                 p.setNom(nom);
+
                 p.setDatedebut(datedebut);
                 p.setDatefin(datefin);
                 p.setCout(cout);
+
+                controller.update(p);
                 break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Erreur de format de date : " + e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Erreur de format numérique : " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Erreur : " + e);
+                System.out.println("Erreur : " + e.getMessage());
             }
-        } while (true);
-        controller.update(p);
+        }
     }
+
 
     public void ajouter() {
         Projet p;
         do {
             try {
-                System.out.println("Nom du projet : ");
+                System.out.println("Nom :");
                 String nom = sc.nextLine();
-                System.out.println("Date de début (AAAA-MM-JJ) : ");
+                System.out.println("Type :");
+                String type = sc.nextLine();
+                System.out.println("Date début (YYYY-MM-DD) :");
                 LocalDate datedebut = LocalDate.parse(sc.nextLine());
-                System.out.println("Date de fin (AAAA-MM-JJ) : ");
+                System.out.println("Date fin (YYYY-MM-DD) :");
                 LocalDate datefin = LocalDate.parse(sc.nextLine());
-                System.out.println("Coût : ");
-                double cout = Double.parseDouble(sc.nextLine());
+                System.out.println("Coût :");
+                double cout = sc.nextDouble();
+                sc.nextLine(); // Consume newline
+
+                // Assuming Projet constructor includes these fields
                 p = new Projet(0, nom, datedebut, datefin, cout);
                 break;
             } catch (Exception e) {
                 System.out.println("Une erreur est survenue : " + e.getMessage());
-                sc.nextLine(); // clear the buffer
             }
         } while (true);
         controller.add(p);
     }
 
     public void special(Projet p) {
-        List<String> options = Arrays.asList("afficher investissements", "ajouter discipline", "modifier discipline", "supprimer discipline", "fin");
+        List<String> options = Arrays.asList("Lister travaux", "Lister investissements", "Fin");
         do {
             int ch = choixListe(options);
 
             switch (ch) {
                 case 1:
-                    afficherInvestissements(p);
+                    listerTravaux(p);
                     break;
                 case 2:
-                    ajouterDiscipline(p);
+                    listerInvestissements(p);
                     break;
                 case 3:
-                    modifierDiscipline(p);
-                    break;
-                case 4:
-                    supprimerDiscipline(p);
-                    break;
-                case 5:
                     return;
             }
         } while (true);
     }
 
-    public void afficherInvestissements(Projet p) {
-        List<Investissement> investissements = p.getInvestissements();
-        if (investissements.isEmpty()) {
-            System.out.println("Aucun investissement pour ce projet.");
-        } else {
-            System.out.println("Investissements pour le projet '" + p.getNom() + "' :");
-            for (Investissement i : investissements) {
-                System.out.println("Discipline : " + i.getSpecialite().getNom() + ", Investissement : " + i.getQuantiteJH());
-            }
-        }
+    public void listerTravaux(Projet p) {
+        affList(new ArrayList<>(((ControllerSpecialProjet) controller).listerTravaux(p)));
     }
 
-    public void ajouterDiscipline(Projet p) {
-        System.out.println("Nom de la discipline : ");
-        String nomDiscipline = sc.nextLine();
-        System.out.println("Quantité en JH : ");
-        int quantiteJH = Integer.parseInt(sc.nextLine());
-        Disciplines discipline = new Disciplines(0, nomDiscipline, null); // Dummy discipline for now
-        p.addDisciplines(discipline, quantiteJH);
-    }
-
-    public void modifierDiscipline(Projet p) {
-        System.out.println("Nom de la discipline à modifier : ");
-        String nomDiscipline = sc.nextLine();
-        System.out.println("Nouvelle quantité en JH : ");
-        int nouvelleQuantite = Integer.parseInt(sc.nextLine());
-        Disciplines discipline = new Disciplines(0, nomDiscipline, null); // Dummy discipline for now
-        p.modifDisciplines(discipline, nouvelleQuantite);
-    }
-
-    public void supprimerDiscipline(Projet p) {
-        System.out.println("Nom de la discipline à supprimer : ");
-        String nomDiscipline = sc.nextLine();
-        Disciplines discipline = new Disciplines(0, nomDiscipline, null); // Dummy discipline for now
-        p.suppDisciplines(discipline);
-    }
-
-    @Override
-    public void affList(List la) {
-        affListe(la);
+    public void listerInvestissements(Projet p) {
+        affList(new ArrayList<>(((ControllerSpecialProjet) controller).listerInvestissements(p)));
     }
 }

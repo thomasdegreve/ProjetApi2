@@ -1,19 +1,17 @@
 package mvc.model;
 
 import entreprise.Investissement;
+import entreprise.Projet;
+import entreprise.Disciplines;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-public interface DAOSpecialInvestissement {
-    int getTotalInvestissement(Investissement investissement);
+public interface DAOSpecialInvestissement  {
 
-    List<Investissement> getInvestissements();
+    List<Investissement> listerInvestissements(Projet p);
 
-    Investissement addInvestissement(Investissement investissement);
+    List<Investissement> listerInvestissements(Disciplines d);
 
-    boolean removeInvestissement(Investissement investissement);
-
-    Investissement updateInvestissement(Investissement investissement);
-
-    Investissement readInvestissement(int idInvestissement);
+    List<Investissement> filtrerInvestissements(Predicate<Investissement> pr);
 }

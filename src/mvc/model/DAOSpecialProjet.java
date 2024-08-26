@@ -1,22 +1,18 @@
 package mvc.model;
 
-import entreprise.Investissement;
 import entreprise.Projet;
-import entreprise.Travail;
+import entreprise.Employe;
+import entreprise.Disciplines;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
-public interface DAOSpecialProjet {
-    List<Investissement> listerInvestissements(Projet projet);
-    List<Travail> listerTravail(Projet projet);
+public interface DAOSpecialProjet  {
 
-    List<Projet> getProjets();
+    Set<Employe> listerEmployes(Projet p);
 
-    Projet addProjet(Projet projet);
+    Set<Disciplines> listerDisciplines(Projet p);
 
-    boolean removeProjet(Projet projet);
-
-    Projet updateProjet(Projet projet);
-
-    Projet readProjet(int idProjet);
+    List<Projet> filtrerProjets(Predicate<Projet> pr);
 }

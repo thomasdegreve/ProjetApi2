@@ -123,4 +123,8 @@ public class Travail {
     public int hashCode() {
         return Objects.hash(idTravail);
     }
+
+
+
+
 }

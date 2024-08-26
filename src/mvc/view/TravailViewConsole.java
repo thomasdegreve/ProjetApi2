@@ -3,27 +3,24 @@ package mvc.view;
 import entreprise.Employe;
 import entreprise.Travail;
 import mvc.controller.ControllerSpecialTravail;
-import mvc.controller.TravailController;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 import static Utilitaire.Utilitaire.*;
 
-
-
 public class TravailViewConsole extends AbstractView<Travail> {
-    Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     @Override
     public void menu() {
         update(controller.getAll());
-        List<String> options = Arrays.asList("ajouter", "retirer", "rechercher", "modifier", "fin");
-        do {
-            int ch = choixListe(options);
+        List<String> options = Arrays.asList("Ajouter", "Retirer", "Rechercher", "Modifier", "Rechercher par employé", "Fin");
+        while (true) {
+            int choice = choixListe(options);
 
-            switch (ch) {
+            switch (choice) {
                 case 1:
                     ajouter();
                     break;
@@ -37,79 +34,114 @@ public class TravailViewConsole extends AbstractView<Travail> {
                     modifier();
                     break;
                 case 5:
+                    rechEmploye();
+                    break;
+                case 6:
                     return;
             }
-        } while (true);
+        }
+    }
+
+    private void rechEmploye() {
+        System.out.print("Nom de l'employé : ");
+        String nom = sc.nextLine();
+        List<Travail> travaux = ((ControllerSpecialTravail) controller).filtrerTravaux(t -> t.getEmployes().getNom().startsWith(nom));
+        if (travaux.isEmpty()) {
+            System.out.println("Aucun résultat trouvé.");
+            return;
+        }
+        int choice = choixListe(travaux);
+        if (choice != 0) special(travaux.get(choice - 1));
     }
 
     private void retirer() {
-        int nl = choixElt(la) - 1;
-        Travail t = la.get(nl);
-        boolean ok = controller.remove(t);
-        if (ok) affMsg("Travail retiré");
-        else affMsg("Impossible de retirer le travail");
+        int choice = choixElt(la) - 1;
+        Travail travail = la.get(choice);
+        boolean ok = controller.remove(travail);
+        affMsg(ok ? "Travail effacé." : "Erreur lors de l'effacement du travail.");
     }
 
     private void affMsg(String msg) {
         System.out.println(msg);
     }
 
-    public void rechercher() {
-        try {
-            System.out.println("ID du travail : ");
-            int id = Integer.parseInt(sc.nextLine());
-            Travail rech = new Travail(0, null, null); // Dummy project for searching by id
-            rech.setIdTravail(id);
-            Travail t = controller.search(rech);
-            if (t == null) affMsg("Travail introuvable");
-            else affMsg(t.toString());
-        } catch (Exception e) {
-            System.out.println("Erreur : " + e);
+    private void rechercher() {
+        System.out.print("Nom de l'employé : ");
+        String nomEmploye = sc.nextLine();
+        Employe employe = new Employe(0, "", nomEmploye, "", "", "", null);
+        Travail recherche = new Travail(0, null, employe);
+        Travail travail = controller.search(recherche);
+        if (travail == null) {
+            affMsg("Travail inconnu.");
+        } else {
+            affMsg(travail.toString());
+            special(travail);
         }
     }
 
-    public void modifier() {
-        int choix = choixElt(la);
-        Travail t = la.get(choix - 1);
-        do {
+    private void modifier() {
+        int choice = choixElt(la) - 1;
+        Travail travail = la.get(choice);
+        while (true) {
             try {
-                int pourcentage = Integer.parseInt(modifyIfNotBlank("pourcentage", Integer.toString(t.getPourcentage())));
-                LocalDate dateEngag = LocalDate.parse(modifyIfNotBlank("date d'engagement (AAAA-MM-JJ)", t.getDateEngag().toString()));
-                // You may want to modify the employee too, but that depends on your requirements
-                t.setPourcentage(pourcentage);
-                t.setDateEngag(dateEngag);
+                String empNom = modifyIfNotBlank("Nom de l'employé", travail.getEmployes().getNom());
+
+                if (!empNom.isEmpty()) {
+                    Employe employe = new Employe(travail.getEmployes().getIdEmploye(), travail.getEmployes().getMatricule(), empNom, travail.getEmployes().getPrenom(), travail.getEmployes().getTel(), travail.getEmployes().getMail(), travail.getEmployes().getDisciplines());
+                    travail.setEmployes(employe);
+                }
+
+                controller.update(travail);
+                affMsg("Travail modifié !");
                 break;
             } catch (Exception e) {
-                System.out.println("Erreur : " + e);
+                System.out.println("Erreur : " + e.getMessage());
             }
-        } while (true);
-        controller.update(t);
+        }
     }
 
-    public void ajouter() {
-        Travail t;
-        do {
+    private void ajouter() {
+        while (true) {
             try {
-                System.out.println("Pourcentage de prise en charge : ");
-                int pourcentage = Integer.parseInt(sc.nextLine());
-                System.out.println("Date d'engagement (AAAA-MM-JJ) : ");
-                LocalDate dateEngag = LocalDate.parse(sc.nextLine());
-                // Dummy employee for now
-                Employe employe = new Employe(0, null, null, null, null,null,null);
-                t = new Travail(pourcentage, dateEngag, employe);
+                System.out.print("Nom de l'employé : ");
+                String empNom = sc.nextLine();
+                System.out.print("Prénom de l'employé : ");
+                String empPrenom = sc.nextLine();
+                System.out.print("Téléphone de l'employé : ");
+                String empTel = sc.nextLine();
+                System.out.print("Email de l'employé : ");
+                String empMail = sc.nextLine();
+
+                Employe employe = new Employe(0, "", empNom, empPrenom, empTel, empMail, null);  // Simplification de l'ajout
+                Travail travail = new Travail(0, null, employe);
+
+                controller.add(travail);
+                affMsg("Travail ajouté !");
                 break;
             } catch (Exception e) {
                 System.out.println("Une erreur est survenue : " + e.getMessage());
             }
-        } while (true);
-        controller.add(t);
+        }
+    }
+
+    private void special(Travail travail) {
+        List<String> options = Arrays.asList("Afficher les détails de l'employé", "Fin");
+        while (true) {
+            int choice = choixListe(options);
+
+            switch (choice) {
+                case 1:
+                    affMsg("Employé : " + travail.getEmployes().toString());
+                    break;
+                case 2:
+                    return;
+            }
+        }
     }
 
     @Override
     public void affList(List la) {
         affListe(la);
-    }
 
-    public void setController(TravailController travailController) {
     }
 }
