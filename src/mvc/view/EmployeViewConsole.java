@@ -141,7 +141,7 @@ public class EmployeViewConsole extends AbstractView<Employe> {
                 System.out.println("Spécialité (Nom) :");
                 String specialiteNom = sc.nextLine();
 
-                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for specialite
+                Disciplines specialite = new Disciplines(0, specialiteNom, "");
 
                 e = new Employe(0, matricule, nom, prenom, tel, mail, specialite);
                 break;
@@ -172,10 +172,10 @@ public class EmployeViewConsole extends AbstractView<Employe> {
     }
 
     private void afficher() {
-        int choix = choixElt(la); // Sélectionne l'employé à afficher
+        int choix = choixElt(la);
         if (choix > 0 && choix <= la.size()) {
             Employe e = la.get(choix - 1);
-            affMsg(e.toString()); // Affiche les détails de l'employé
+            affMsg(e.toString());
         } else {
             affMsg("Choix invalide.");
         }
