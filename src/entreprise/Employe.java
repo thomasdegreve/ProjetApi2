@@ -195,4 +195,17 @@ public class Employe {
 
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Employe{" +
+                "idEmploye=" + idEmploye +
+                ", matricule='" + matricule + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", tel='" + tel + '\'' +
+                ", mail='" + mail + '\'' +
+                ", specialite=" + specialite +
+                '}';
+    }
 }

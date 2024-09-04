@@ -82,12 +82,18 @@ public class ProjetViewConsole extends AbstractView<Projet> {
             String nom = sc.nextLine();
             System.out.println("Type :");
             String type = sc.nextLine();
-            // Assuming Projet has a constructor matching these parameters
-            Projet rech = new Projet(0, nom, LocalDate.now(), LocalDate.now(), 0.0); // Default values for now
+
+            Projet rech = new Projet(0, nom, LocalDate.now(), LocalDate.now(), 0.0);
             Projet p = controller.search(rech);
             if (p == null) affMsg("Projet inconnu");
-            else {
+            else {//TODO QUESTION 1
                 affMsg(p.toString());
+                int x = p.InvestissementTotal();
+
+                System.out.println("L'investissement total de ce projet est est de " + x);
+
+
+
                 special(p);
             }
         } catch (Exception e) {
@@ -136,23 +142,37 @@ public class ProjetViewConsole extends AbstractView<Projet> {
     }
 
 
-    public void ajouter() {
+    public void ajouter() {//TODO QUESTION 3
         Projet p;
         do {
             try {
-                System.out.println("Nom :");
-                String nom = sc.nextLine();
-                System.out.println("Type :");
-                String type = sc.nextLine();
-                System.out.println("Date début (YYYY-MM-DD) :");
-                LocalDate datedebut = LocalDate.parse(sc.nextLine());
-                System.out.println("Date fin (YYYY-MM-DD) :");
-                LocalDate datefin = LocalDate.parse(sc.nextLine());
-                System.out.println("Coût :");
-                double cout = sc.nextDouble();
-                sc.nextLine(); // Consume newline
+                String nom;
+                String type;
+                do {
+                    System.out.println("Nom :");
+                     nom = sc.nextLine();
+                    System.out.println("Type :");
+                     type = sc.nextLine();
+                }while (nom.isEmpty() || type.isEmpty());
 
-                // Assuming Projet constructor includes these fields
+                LocalDate datefin;
+                LocalDate datedebut;
+                do {
+                    System.out.println("Date début (YYYY-MM-DD) :");
+                    datedebut = LocalDate.parse(sc.nextLine());
+                    System.out.println("Date fin (YYYY-MM-DD) :");
+                    datefin = LocalDate.parse(sc.nextLine());
+                } while (datefin.isBefore(datedebut));
+
+
+                double cout;
+                do {
+                    System.out.println("Coût :");
+                    cout = sc.nextDouble();
+                    sc.nextLine();
+                } while (cout < 0 );
+
+
                 p = new Projet(0, nom, datedebut, datefin, cout);
                 break;
             } catch (Exception e) {

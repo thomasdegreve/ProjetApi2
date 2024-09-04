@@ -306,4 +306,18 @@ public class Projet {
     public int hashCode() {
         return Objects.hash(idProjet);
     }
+
+    @Override
+    public String toString() {
+        return "Projet{" +
+                "idProjet=" + idProjet +
+                ", nom='" + nom + '\'' +
+                ", datedebut=" + datedebut +
+                ", datefin=" + datefin +
+                ", cout=" + cout +
+                ", invest=" + investissements +
+
+
+                '}';
+    }
 }

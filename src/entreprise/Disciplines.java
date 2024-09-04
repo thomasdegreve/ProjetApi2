@@ -121,4 +121,14 @@ public class Disciplines {
     public int getId() {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "Disciplines{" +
+                "idDisciplines=" + idDisciplines +
+                ", description='" + description + '\'' +
+                ", nom :" + nom +
+
+                '}';
+    }
 }

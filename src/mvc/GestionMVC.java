@@ -131,7 +131,7 @@ public class GestionMVC {
 
         Projet p1 = new Projet(1, "Développement d'une application", LocalDate.of(2024, 6, 30),LocalDate.of(2024,8,30),120.00);
         pm.add(p1);
-      //  d1.addProjet(p1);
+        //d1.addProjet(p1);
 
         Projet p2 = new Projet(2, "campagne marketing", LocalDate.of(2024, 6, 30),LocalDate.of(2024,8,30),120.00);
         pm.add(p2);

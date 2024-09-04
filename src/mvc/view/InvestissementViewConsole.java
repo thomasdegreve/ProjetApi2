@@ -106,7 +106,7 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
             try {
                 String quantiteJH = modifyIfNotBlank("Quantité JH", i.getQuantiteJH());
                 String specialiteNom = modifyIfNotBlank("Nom spécialité", i.getSpecialite().getNom());
-                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for Disciplines
+                Disciplines specialite = new Disciplines(0, specialiteNom, "");
 
                 i.setQuantiteJH(quantiteJH);
                 i.setSpecialite(specialite);
@@ -129,7 +129,7 @@ public class InvestissementViewConsole extends AbstractView<Investissement> {
                 sc.nextLine();
                 System.out.println("Nom spécialité :");
                 String specialiteNom = sc.nextLine();
-                Disciplines specialite = new Disciplines(0, specialiteNom, ""); // Placeholder for Disciplines
+                Disciplines specialite = new Disciplines(0, specialiteNom, "");
 
                 i = new Investissement(quantiteJH, specialite);
                 break;

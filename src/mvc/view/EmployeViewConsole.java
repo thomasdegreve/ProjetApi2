@@ -2,6 +2,8 @@ package mvc.view;
 
 import entreprise.Employe;
 import entreprise.Disciplines;
+import entreprise.Projet;
+import mvc.controller.ControllerSpecialDiscipline;
 import mvc.controller.ControllerSpecialEmploye;
 
 import java.util.ArrayList;
@@ -86,8 +88,11 @@ public class EmployeViewConsole extends AbstractView<Employe> {
 
             if (e == null) {
                 affMsg("Employé inconnu.");
-            } else {
+            } else {//TODO QUESTION 2
                 affMsg(e.toString());
+
+                listerProjets(e.getDisciplines());
+
                 special(e);
             }
         } catch (Exception e) {
@@ -169,6 +174,9 @@ public class EmployeViewConsole extends AbstractView<Employe> {
 
     public void listerTravaux(Employe e) {
         affList(new ArrayList<>(((ControllerSpecialEmploye)controller).listerTravaux(e)));
+    }
+    public void listerProjets(Disciplines d){
+        affList(new ArrayList<>(((ControllerSpecialDiscipline)controller).listerProjets(d)));
     }
 
     private void afficher() {

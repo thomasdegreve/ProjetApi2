@@ -98,4 +98,13 @@ public class Investissement {
     public Object getProjet() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Investissement{" +
+                "idInvest=" + idInvest +
+                ", quantiteJH=" + quantiteJH +
+                ", specialite=" + specialite +
+                '}';
+    }
 }
